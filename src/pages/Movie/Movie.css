@@ -1,0 +1,7 @@
+.coverContainer {
+	/* --bg: */
+	background: linear-gradient(to right, white, transparent, white), var(--bg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}

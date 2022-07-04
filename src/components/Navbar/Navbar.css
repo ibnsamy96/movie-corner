@@ -1,0 +1,13 @@
+.link-danger:focus-visible,
+.link-danger:hover {
+	background-color: white;
+}
+
+.form-control:focus {
+	border-color: #0dcaf0 !important;
+	box-shadow: none !important;
+}
+
+.selected {
+	background-color: white;
+}
