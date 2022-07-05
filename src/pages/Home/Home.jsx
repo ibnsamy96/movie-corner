@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import MoviesList from "../../components/MoviesList/MoviesList";
 import axiosInstance from "../../network/config.js";
+import { getMovies } from "./../../store/actions/movies";
 
 function Home(props) {
-	const [moviesList, setMoviesList] = useState([]);
+	// const [moviesList, setMoviesList] = useState([]);
 
 	const favorites = useSelector((state) => state.favorites);
+	const moviesList = useSelector((state) => state.movies);
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -17,32 +19,36 @@ function Home(props) {
 		totalPages: 1,
 	});
 
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		const wantedPage = new URLSearchParams(location.search).get("page") || 1;
 		setIsLoading(true);
 
 		async function fetchData() {
 			try {
-				const request = await axiosInstance.get("/movie/popular", {
-					params: {
-						page: wantedPage,
-					},
-				});
+				// const request = await axiosInstance.get("/movie/popular", {
+				// 	params: {
+				// 		page: wantedPage,
+				// 	},
+				// });
 
-				// console.log(request.data.results);
-				const fetchedMovies = request.data.results;
-				fetchedMovies.forEach((movieInfo) => {
+				dispatch(getMovies());
+
+				console.log(await moviesList);
+				// const fetchedMovies = request.data.results;
+				moviesList.forEach((movieInfo) => {
 					const favoritesIds = favorites.map((obj) => obj.id);
 					if (favoritesIds.includes(movieInfo.id)) movieInfo.doBookmark = true;
 					else movieInfo.doBookmark = false;
 				});
 
-				setMoviesList([...fetchedMovies]);
+				// setMoviesList([...fetchedMovies]);
 				setIsLoading(false);
-				setPagination({
-					currentPage: request.data.page,
-					totalPages: request.data.total_pages,
-				});
+				// setPagination({
+				// 	currentPage: request.data.page,
+				// 	totalPages: request.data.total_pages,
+				// });
 			} catch (error) {
 				console.log(error);
 				setIsLoading(false);
