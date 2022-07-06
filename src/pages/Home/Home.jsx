@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import MoviesList from "../../components/MoviesList/MoviesList";
 import axiosInstance from "../../network/config.js";
 import { getMovies } from "./../../store/actions/movies";
+import LanguageContext from "../../context/language.js";
 
 function Home(props) {
 	// const [moviesList, setMoviesList] = useState([]);
 
 	const favorites = useSelector((state) => state.favorites);
 	const moviesList = useSelector((state) => state.movies);
+	const { selectedLanguage, setSelectedLanguage } = useContext(LanguageContext);
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -33,9 +35,8 @@ function Home(props) {
 				// 	},
 				// });
 
-				dispatch(getMovies());
+				dispatch(getMovies(selectedLanguage));
 
-				console.log(await moviesList);
 				// const fetchedMovies = request.data.results;
 				moviesList.forEach((movieInfo) => {
 					const favoritesIds = favorites.map((obj) => obj.id);
@@ -55,23 +56,28 @@ function Home(props) {
 			}
 		}
 		fetchData();
-	}, [location]);
+	}, [location, selectedLanguage]);
 
 	return (
 		<>
 			{isLoading ? (
-				<div className='h-100 row justify-content-center align-items-center'>
+				<div
+					dir={selectedLanguage === "en" ? "ltr" : "rtl"}
+					className='h-100 row justify-content-center align-items-center'
+				>
 					<div className='spinner-grow text-info' role='status'>
 						<span className='visually-hidden'>Loading...</span>
 					</div>
 				</div>
 			) : (
 				<>
-					<h2 className='text-center h1 mb-3'>Popular Movies</h2>
-					<MoviesList
-						moviesList={moviesList}
-						addMovieToFavorites={props.addMovieToFavorites}
-					/>
+					<h2
+						dir={selectedLanguage === "en" ? "ltr" : "rtl"}
+						className='text-center h1 mb-3'
+					>
+						{selectedLanguage === "en" ? "Popular Movies" : "أفلامنا المختارة"}
+					</h2>
+					<MoviesList addMovieToFavorites={props.addMovieToFavorites} />
 
 					<nav aria-label='...'>
 						<ul className='pagination  justify-content-center pb-5'>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./MovieCard.css";
 import { BsBookmarkHeartFill, BsBookmarkHeart } from "react-icons/bs";
 import { useHistory, Link } from "react-router-dom";
@@ -7,16 +7,26 @@ import {
 	addToFavorites,
 	removeFromFavorites,
 } from "../../store/actions/favorites.js";
+import LanguageContext from "../../context/language.js";
 
 function MovieCard(props) {
-	const [cardInfo, setCardInfo] = useState(props.movieInfo);
+	const [cardInfo, setCardInfo] = useState({ ...props.movieInfo });
 	// const history = useHistory();
 	const dispatch = useDispatch();
+	const { selectedLanguage, setSelectedLanguage } = useContext(LanguageContext);
+
+	useEffect(() => {
+		console.log(cardInfo);
+	}, [cardInfo]);
 
 	// const isBookmarked = props.props.movieInfo.isBookmarked;
 
 	return (
-		<div className='cardContainer col-12 col-sm-6 col-lg-4 col-xl-3 px-1 px-md-2 px-xl-2'>
+		<div
+			key={cardInfo.id}
+			dir={selectedLanguage === "en" ? "ltr" : "rtl"}
+			className='cardContainer col-12 col-sm-6 col-lg-4 col-xl-3 px-1 px-md-2 px-xl-2'
+		>
 			<div className='card h-100 position-relative'>
 				<img
 					src={
